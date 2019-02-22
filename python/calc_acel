@@ -5,5 +5,11 @@ from calc_mod import *
 
 
 if __name__ =="__main__":
-    print("***")
+    ap = argparse.ArgumentParser()
+    ap.add_argument('-imname','--imname',required=True)
+    ap.add_argument('-hz',type=float)
+    ap.add_argument('-dx',type=float)
+    args = vars(ap.parse_args())
+    print(calc(args['imname'],args['hz'],args['dx']))
+
    
