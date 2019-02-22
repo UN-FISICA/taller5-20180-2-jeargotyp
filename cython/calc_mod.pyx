@@ -27,7 +27,7 @@ def acel(x,y):
     
     return a*2
 
-def calc(image,dx,hz):
+def calc(image,hz,dx):
     x=imread(image)
     #blanco y negro
     im=(x[:,:,0]+x[:,:,1]+x[:,:,2])/3
