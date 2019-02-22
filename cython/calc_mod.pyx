@@ -1,10 +1,31 @@
-from scipy.misc import imread
-from numpy.linalg import inv,lstsq
-import numpy as np
+from matplotlib.pyplot import imread,imshow
+
 
 def mean(L):
     m=sum(L)/len(L)
     return m
+
+def acel(x,y):
+    n=len(x)
+    Sx=sum(x)
+    Sy=sum(y)
+    Sxy,Sxx,Sxxx,Sxxy,Sxxxx=[],[],[],[],[]
+    
+    for i in range(len(x)):
+        Sxy.append(x[i]*y[i])
+        Sxx.append(x[i]*x[i])
+        Sxxx.append(x[i]*x[i]*x[i])
+        Sxxy.append(x[i]*x[i]*y[i])
+        Sxxxx.append(x[i]*x[i]*x[i]*x[i])
+    
+    s_xx=sum(Sxx)-(Sx**2/n)
+    s_xy=sum(Sxy)-(Sx*Sy/n)
+    s_xxx=sum(Sxxx)-(Sx/n)*(sum(Sxx))
+    s_xxy=sum(Sxxy)-(Sy/n)*(sum(Sxx))
+    s_xxxx=sum(Sxxxx)-(sum(Sxx)**2/n)
+    a=(s_xxy*s_xx-s_xy*s_xxx)/(s_xx*s_xxxx-s_xxx**2)
+    
+    return a*2
 
 def calc(image,dx,hz):
 	x=imread(image)
@@ -18,20 +39,22 @@ def calc(image,dx,hz):
                 im[i][j]=1
             else:
                 im[i][j]=0
-    #imshow(im)
+    pix=im[0][0]
     ii=[]
     #labelizando
     for i in range(len(im)):
         for j in range(len(im[i])):
-            if im[i][j]==1:
-                ii.append(i)
-    #print(ii)
+            if pix==1:
+                if im[i][j]==0:
+                    ii.append(i)
+            else:              
+                if im[i][j]==1:
+                    ii.append(i)
     pc=[]
     for index in range(len(ii)):
         if index+1<len(ii):
             if  ii[index+1]-ii[index]!=1 and ii[index+1]-ii[index]!=0:
                 pc.append(index)
-    #print(pc)
     L=[]
     for k in range(len(pc)):
         mati=[]   
@@ -50,26 +73,11 @@ def calc(image,dx,hz):
     for i in L:
         cmy.append(mean(i)*dx)
     tiempo=[]
-    #print(cmy)
+
     for t in range(len(cmy)):
         tiempo.append((t+1)/hz)
 
-    x=np.array(tiempo)
-    y=np.array(cmy)
+    x=tiempo
+    y=cmy
 
-    f=[]
-    f.append(lambda x:np.ones_like(x))
-    f.append(lambda x:x)
-    f.append(lambda x:x**2)
-
-    Xt=[]
-
-    for fu in f:
-        Xt.append(fu(x))
-    Xt=np.array(Xt)  
-
-    X=Xt.transpose()
-
-    a = np.dot(np.dot(inv(np.dot(Xt,X)),Xt),y)
-
-    return a[2]*2
+    return acel(x,y)
