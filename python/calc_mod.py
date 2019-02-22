@@ -9,7 +9,11 @@ def calc(image, hz, dx):
         x=np.asarray(x,dtype=np.float32)
         y=(x[:,:,0]+x[:,:,1]+x[:,:,2])/3
         im=nd.median_filter(y,(3,3))
-        bi=where(im<200,1,0)
+        pix=im[0][0]
+        if pix < 2:
+                bi=where(im<40,0,1)
+        else:
+                bi=where(im<200,1,0)
         label,n=nd.measurements.label(bi)
         cm,tiempo=[],[]
         j=0
