@@ -29,7 +29,7 @@ def acel(x,y):
 
 def calc(image,hz,dx):
     x=imread(image)
-	#blanco y negro
+    #blanco y negro
     im=(x[:,:,0]+x[:,:,1]+x[:,:,2])/3
     #binarizando
     k=40
