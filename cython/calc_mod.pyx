@@ -27,10 +27,10 @@ def acel(x,y):
     
     return a*2
 
-def calc(image,dx,hz):
-	x=imread(image)
+def calc(image,hz,dx):
+    x=imread(image)
 	#blanco y negro
-	im=(x[:,:,0]+x[:,:,1]+x[:,:,2])/3
+    im=(x[:,:,0]+x[:,:,1]+x[:,:,2])/3
     #binarizando
     k=40
     for i in range(len(im)):
